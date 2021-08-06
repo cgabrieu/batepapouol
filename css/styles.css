@@ -24,6 +24,7 @@ ion-icon {
     top: 7px;
     height: 31px;
     width: 42px;
+    cursor: pointer;
 }
 
 header {
@@ -138,10 +139,13 @@ aside {
     top: 0;
     background-color: #FFFFFF;
     height: 100%;
-    width: 260px;
+    width: 0px;
     z-index: 2;
     display: flex;
     flex-direction: column;
+    text-align: center;
+    transition: 0.5s;
+    white-space: nowrap;
 }
 
 .check {
@@ -175,7 +179,7 @@ aside p, aside h4{
 }
 
 aside h4 {
-    margin: 45px 20px;
+    margin: 35px 20px;
 }
 
 .background {
@@ -185,5 +189,5 @@ aside h4 {
     z-index: 1;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);;
+    background-color: rgba(0, 0, 0, 0.6);
 }
