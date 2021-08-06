@@ -3,6 +3,14 @@ body {
     background-color: #E5E5E5;
 }
 
+strong {
+    font-weight: bold;
+}
+
+span {
+    color: #AAAAAA;
+}
+
 header img {
     width: 75px;
 }
@@ -47,4 +55,23 @@ footer input {
 ::placeholder {
     font-style: italic;
     color: black;
-  }
+}
+
+li {
+    padding: 20px 8px;
+    margin: 4px 0;
+    border-radius: 2px;
+}
+
+.status {
+    background-color: #DCDCDC;
+}
+
+.msg {
+    background-color: #FFFFFF;
+}
+
+.private-msg {
+    background-color: #FFDEDE;
+}
+
