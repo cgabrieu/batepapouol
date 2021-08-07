@@ -47,7 +47,7 @@ function getParticipants() {
                 </div>`
         });
         timerCheckStatus = setInterval(checkStatus, 5000);
-        getMsgs();
+        getMessage();
     });
 }
 
