@@ -101,8 +101,10 @@ li {
 
 section {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
     background-color: white;
 }
 
@@ -138,6 +140,12 @@ section input ::placeholder {
 section button {
     width: 109px;
     height: 45px;
+    color: #696969;
+    font-size: 18px;
+    background: #E7E7E7;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
 }
 
 aside {

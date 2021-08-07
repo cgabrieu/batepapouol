@@ -1,5 +1,6 @@
 let to = "Todos";
 let visibility = "Público";
+let username;
 
 function toggleNav(action) {
     document.querySelector(".background").classList.toggle("hidden");
@@ -8,6 +9,11 @@ function toggleNav(action) {
         return;
     }
     document.querySelector("aside").style.width = "260px";
+}
+
+function setName() {
+    username = document.querySelector("section input").value;
+    if (isNaN(username)) document.querySelector("section").classList.add("hidden");
 }
 
 function changeContact(select) {
