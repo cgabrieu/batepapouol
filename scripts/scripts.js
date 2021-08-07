@@ -1,6 +1,5 @@
-let to = "Todos";
-let visibility = "Público";
-let username;
+let to = "Todos", visibility = "Público", username, participants = [];
+const participantsAPI = "https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/participants";
 
 function toggleNav(action) {
     document.querySelector(".background").classList.toggle("hidden");
@@ -13,7 +12,41 @@ function toggleNav(action) {
 
 function setName() {
     username = document.querySelector("section input").value;
-    if (isNaN(username)) document.querySelector("section").classList.add("hidden");
+    if (!isNaN(username)) return;
+
+    const promise = axios.post(participantsAPI, {"name":username});
+    promise.catch(e => {
+        document.querySelector("section p").innerHTML = `Erro - ${e.response.data} <br> Nome de usuário já utilizado!`
+    });
+    promise.then(() => {
+        const section = document.querySelector("section");
+        section.style.opacity = "0"; //Somente para animação
+        setTimeout(() => {
+            document.querySelector("section").classList.add("hidden");
+        }, 800);
+        getParticipants();
+    });
+}
+
+function getParticipants() {
+    const promise = axios.get(participantsAPI);
+
+    promise.catch(e => {
+        alert("Erro ao obter participantes da conversa. " + e.response.data)
+    });
+    promise.then(s => {
+        s.data.forEach(e => {
+            if (e.name !== username)
+                document.querySelector(".contacts").innerHTML += 
+                `<div class="contact" onclick="changeContact(this)">
+                    <div class="container">
+                        <ion-icon name="person-circle"></ion-icon>
+                        <p>${e.name}</p>
+                    </div>
+                    <ion-icon class="check" name="checkmark"></ion-icon>
+                </div>`
+        });
+    });
 }
 
 function changeContact(select) {
@@ -31,7 +64,7 @@ function changeVisibility(select) {
 }
 
 function checkChanges() {
-    let select = document.querySelector("footer .container p");
+    let select = document.querySelector("footer p");
     if (to !== "Todos") {
         select.innerHTML = `Enviando para ${to} (${visibility})`;
         return;

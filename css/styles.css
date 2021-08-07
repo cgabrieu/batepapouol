@@ -56,11 +56,15 @@ footer ion-icon {
     top: 3px;
 }
 
+footer .container {
+    width: 90%;
+}
+
 footer input {
     font-size: 18px;
     border: none;
     outline: none;
-    width: 90vw;
+    width: 100%;
 }
 
 footer ::placeholder {
@@ -106,6 +110,8 @@ section {
     left: 0;
     bottom: 0;
     background-color: white;
+    opacity: 1;
+    transition: 0.7s;
 }
 
 section .container {
@@ -117,6 +123,7 @@ section .container {
 
 section img {
     width: 130px;
+    margin-bottom: 95px;
 }
 
 section input {
@@ -124,8 +131,8 @@ section input {
     height: 54px;
     border-color: #D7D7D7;
     font-size: 18px;
-    margin-top: 95px;
     margin-bottom: 15px;
+    margin-top: 10px;
     border: 1px solid #D7D7D7;
     box-sizing: border-box;
     border-radius: 4px;
@@ -135,6 +142,10 @@ section input {
 
 section input ::placeholder {
     color: #AEAEAE;
+}
+
+section p {
+    color: brown;
 }
 
 section button {
