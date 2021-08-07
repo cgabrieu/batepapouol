@@ -1,5 +1,6 @@
-let to = "Todos", visibility = "Público", username, participants = [];
+let to = "Todos", visibility = "Público", username, timerCheckStatus;
 const participantsAPI = "https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/participants";
+const loginSection = document.querySelector("section")
 
 function toggleNav(action) {
     document.querySelector(".background").classList.toggle("hidden");
@@ -19,8 +20,7 @@ function setName() {
         document.querySelector("section p").innerHTML = `Erro - ${e.response.data} <br> Nome de usuário já utilizado!`
     });
     promise.then(() => {
-        const section = document.querySelector("section");
-        section.style.opacity = "0"; //Somente para animação
+        loginSection.style.opacity = "0"; //Somente para animação
         setTimeout(() => {
             document.querySelector("section").classList.add("hidden");
         }, 800);
@@ -32,7 +32,7 @@ function getParticipants() {
     const promise = axios.get(participantsAPI);
 
     promise.catch(e => {
-        alert("Erro ao obter participantes da conversa. " + e.response.data)
+        alert("Erro ao obter participantes da conversa. " + e.response.data);
     });
     promise.then(s => {
         s.data.forEach(e => {
@@ -46,7 +46,22 @@ function getParticipants() {
                     <ion-icon class="check" name="checkmark"></ion-icon>
                 </div>`
         });
+        timerCheckStatus = setInterval(checkStatus, 5000);
     });
+}
+
+function checkStatus() {
+    if (document.visibilityState === "visible") {
+        const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/status", {"name":username});
+        promise.catch(e => {
+            alert("Erro ao atualizar status do usuário." + e.response.data);
+        });
+    } else {
+        clearInterval(timerCheckStatus);
+        loginSection.classList.remove("hidden");
+        loginSection.style.opacity = "1";
+        document.querySelector("section p").innerHTML = `Você saiu da sala.`;
+    }
 }
 
 function changeContact(select) {
