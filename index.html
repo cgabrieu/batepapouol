@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
 </head>
 <body>
@@ -40,7 +40,7 @@
         <footer>
             <div class="container">
                 <input class="input-msg" type="text" placeholder="Escreva aqui...">
-                
+                <p></p>
             </div>
             <ion-icon name="paper-plane-outline"></ion-icon>
         </footer>
@@ -49,40 +49,43 @@
     <aside>
         <div class="contacts">
             <h4>Escolha um contato para<br>enviar mensagem:</h4>
-            <div class="contact">
+            <div class="contact" onclick="changeContact(this)">
                 <div class="container">
                     <ion-icon name="people"></ion-icon>
                     <p>Todos</p>
                 </div>
-                <ion-icon class="check" name="checkmark"></ion-icon>
+                <ion-icon class="check select" name="checkmark"></ion-icon>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="changeContact(this)">
                 <div class="container">
                     <ion-icon name="person-circle"></ion-icon>
                     <p>João</p>
                 </div>
+                <ion-icon class="check" name="checkmark"></ion-icon>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="changeContact(this)">
                 <div class="container">
                     <ion-icon name="person-circle"></ion-icon>
                     <p>Maria</p>
                 </div>
+                <ion-icon class="check" name="checkmark"></ion-icon>
             </div>
         </div>
         <div class="visibility">
             <h4>Escolha a visibilidade:</h4>
-            <div class="public">
+            <div class="public" onclick="changeVisibility(this)">
                 <div class="container">
                     <ion-icon name="lock-open"></ion-icon>
                     <p>Público</p>
                 </div>
-                <ion-icon class="check" name="checkmark"></ion-icon>
+                <ion-icon class="check select" name="checkmark"></ion-icon>
             </div>
-            <div class="private">
+            <div class="private" onclick="changeVisibility(this)">
                 <div class="container">
                     <ion-icon name="lock-closed"></ion-icon>
                     <p>Reservadamente</p>
                 </div>
+                <ion-icon class="check" name="checkmark"></ion-icon>
             </div>
         </div>
     </aside>

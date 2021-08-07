@@ -49,21 +49,28 @@ footer {
     box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 footer ion-icon {
-    top: 2px;
+    top: 3px;
 }
 
 footer input {
     font-size: 18px;
     border: none;
     outline: none;
+    width: 90vw;
 }
 
 footer ::placeholder {
     font-style: italic;
     color: black;
+}
+
+footer p {
+    margin-top: 5px;
+    font-weight: 300;
 }
 
 ul {
@@ -152,6 +159,11 @@ aside {
     color:#28BB25;
     width: 20px;
     --ionicon-stroke-width: 64px;
+    visibility: hidden;
+}
+
+.select {
+    visibility: visible;
 }
 
 aside .container {
@@ -172,6 +184,7 @@ aside .contact, aside .public, aside .private {
     margin: 10px 0;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 aside p, aside h4{
@@ -190,4 +203,5 @@ aside h4 {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
+    transition: 0.5s;
 }
