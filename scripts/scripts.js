@@ -47,7 +47,29 @@ function getParticipants() {
                 </div>`
         });
         timerCheckStatus = setInterval(checkStatus, 5000);
+        getMsgs();
     });
+}
+
+function getMessage() {
+    const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages");
+    promise.then(s => {
+        s.data.forEach(e => {
+            if (e.type === "status") {
+                document.querySelector("main ul").innerHTML += 
+                `<li class="${e.type}"><time>(${e.time})</time> <strong>${e.from}</strong> ${e.text}</li>`;
+            } else if (e.type === "message") {
+                document.querySelector("main ul").innerHTML +=
+                `<li class="${e.type}"><time>(${e.time})</time> <strong>${e.from}</strong> para <strong>${e.to}</strong>: ${e.text}</li>`;
+            } else {
+                `<li class="${e.type}"><time>(${e.time})</time> <strong>${e.from}</strong> reservadamente para <strong>${e.to}</strong>: ${e.text}</li>`;
+            }
+        });
+    });
+}
+
+function sendMessage() {
+
 }
 
 function checkStatus() {

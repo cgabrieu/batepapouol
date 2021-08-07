@@ -77,8 +77,8 @@ footer p {
     font-weight: 300;
 }
 
-ul {
-    margin-top: 100px;
+main {
+    margin: 100px 0;
 }
 
 li {
@@ -95,16 +95,16 @@ li {
     background-color: #DCDCDC;
 }
 
-.msg {
+.message {
     background-color: #FFFFFF;
 }
 
-.private-msg {
+.private_message {
     background-color: #FFDEDE;
 }
 
 section {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;
