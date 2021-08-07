@@ -68,9 +68,6 @@ function getMessage() {
     });
 }
 
-function sendMessage() {
-
-}
 
 function checkStatus() {
     if (document.visibilityState === "visible") {
