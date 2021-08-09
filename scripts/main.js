@@ -7,6 +7,8 @@ const statusAPI = "https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/status
 const loginSection = document.querySelector("section");
 const messageMain = document.querySelector("main ul");
 const asideContacts = document.querySelector(".contacts");
+const asidePublic = document.querySelector(".public");
+const messageInput = document.querySelector(".input-msg");
 
 const originalLoginSection = loginSection.querySelector(".box").innerHTML;
 
@@ -15,14 +17,18 @@ const originalLoginSection = loginSection.querySelector(".box").innerHTML;
 function setName() {
     username = loginSection.querySelector("input").value;
     if (!isNaN(username)) return;
-
+    
     loginSection.querySelector(".box").innerHTML = `
-        <img src="assets/loading.gif" alt="Carregando">
-        <h1>Entrando...</h1>`
-
-    axios.post(participantsAPI, {"name":username}).catch(e => {
+    <img src="assets/loading.gif" alt="Carregando">
+    <h1>Entrando...</h1>`
+    
+    const promise = axios.post(participantsAPI, {"name":username});
+    promise.catch(e => {
+        loginSection.querySelector(".box").innerHTML = originalLoginSection;
         loginSection.querySelector("p").innerHTML = `Erro - ${e.response.data} <br> Nome de usuário já utilizado!`
-    }).then(() => {
+    });
+    
+    promise.then(() => {
         loginSection.style.opacity = "0"; //Somente para transição
         setTimeout(() => {loginSection.classList.add("hidden");}, 800); 
         checkUserOn();
@@ -33,6 +39,7 @@ function setName() {
         timerCheckUserOn = setInterval(checkUserOn, 5000);
         timerNewMessages = setInterval(getNewMessages, 3000);
         timerGetParticipants = setInterval(getParticipants, 10000);
+        
     });
 }
 
@@ -52,14 +59,13 @@ function getParticipants() {
                     <ion-icon class="check ${(to === e.name) ? "select" : ""}" name="checkmark"></ion-icon>
                 </div>`
         });
-        hasContactSelected()
+        hasContactSelected();
     });
 }
 
 function hasContactSelected() {
     if (asideContacts.querySelector(".select") === null) { //Caso o contato selecionado saia do chat
-        asideContacts.firstElementChild.querySelector(".check").classList.add("select");
-        to = "Todos";
+        changeContact(asideContacts.firstElementChild);
     }
     updateAsideChanges();
 }
@@ -98,19 +104,38 @@ function drawMessages(msg) {
 
 function checkUserOn() {
     if (document.visibilityState === "visible") {
-        axios.post(statusAPI, {"name":username}).catch(e => {
+        axios.post(statusAPI, {name:username}).catch(e => {
             alert("Erro ao atualizar status do usuário." + e.response.data);
         });
     } else {
-        clearInterval(timerCheckUserOn);
-        clearInterval(timerNewMessages);
-        clearInterval(timerGetParticipants);
-        loginSection.classList.remove("hidden");
-        loginSection.style.opacity = "1";
-        loginSection.querySelector(".box").innerHTML = originalLoginSection;
-        loginSection.querySelector("p").innerHTML = `Você saiu da sala.`;
-        loginSection.querySelector("input").value = username;
+        userLoggedOut();
     }
+}
+
+function userLoggedOut() {
+    clearInterval(timerCheckUserOn);
+    clearInterval(timerNewMessages);
+    clearInterval(timerGetParticipants);
+    loginSection.classList.remove("hidden");
+    loginSection.style.opacity = "1";
+    loginSection.querySelector(".box").innerHTML = originalLoginSection;
+    loginSection.querySelector("p").innerHTML = `Você saiu da sala.`;
+    loginSection.querySelector("input").value = username;
+    messageInput.value = "";
+}
+
+function sendMessage() {
+    const msg = {
+        from: username,
+        to: to,
+        text: messageInput.value,
+        type: (visibility === "Público" || to === "Todos") ? "message" : "private_message"
+    }
+    
+    axios.post(messagesAPI, msg).then(() => {
+        messageInput.value = "";
+        getNewMessages();
+    });
 }
 
 
@@ -126,13 +151,17 @@ function toggleAside(action) {
 }
 
 function changeContact(select) {
-    document.querySelector(".contact .select").classList.toggle("select");
-    select.querySelector(".check").classList.toggle("select");    
+    if (asideContacts.querySelector(".select") !== null) asideContacts.querySelector(".select").classList.toggle("select");
+    
+    select.querySelector(".check").classList.toggle("select");
     to = select.id;
-    updateAsideChanges();
+    if (to === "Todos") changeVisibility(asidePublic);
+    updateAsideChanges();  
 }
 
 function changeVisibility(select) {
+    if (to === "Todos" && visibility === "Público") return;
+    
     document.querySelector(".visibility .select").classList.toggle("select");
     select.querySelector(".check").classList.toggle("select");
     visibility = select.querySelector("p").innerHTML;
