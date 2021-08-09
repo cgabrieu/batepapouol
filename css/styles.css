@@ -78,7 +78,7 @@ footer p {
 }
 
 main {
-    margin: 100px 0;
+    padding: 100px 0;
 }
 
 li {
@@ -124,6 +124,14 @@ section .container {
 section img {
     width: 130px;
     margin-bottom: 95px;
+}
+
+.box img {
+    margin-bottom: 10px;
+}
+
+.box h1 {
+    font-size: 18px;
 }
 
 section input {
