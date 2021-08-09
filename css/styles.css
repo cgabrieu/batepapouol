@@ -85,6 +85,7 @@ li {
     padding: 20px 8px;
     margin: 4px 0;
     border-radius: 2px;
+    word-wrap: break-word;
 }
 
 .hidden {
@@ -180,6 +181,12 @@ aside {
     text-align: center;
     transition: 0.5s;
     white-space: nowrap;
+    
+}
+
+aside .contacts { 
+    overflow-y: scroll;
+    max-height: 70%;
 }
 
 .check {
@@ -208,7 +215,7 @@ aside .contacts, aside .visibility {
 }
 
 aside .contact, aside .public, aside .private {
-    margin: 10px 0;
+    margin: 3% 0;
     display: flex;
     justify-content: space-between;
     cursor: pointer;
@@ -219,7 +226,7 @@ aside p, aside h4{
 }
 
 aside h4 {
-    margin: 35px 20px;
+    margin: 10% 15px;
 }
 
 .background {

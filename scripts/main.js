@@ -12,8 +12,8 @@ const messageInput = document.querySelector(".input-msg");
 
 const originalLoginSection = loginSection.querySelector(".box").innerHTML;
 
-/*                                                                */
 
+/*                                 User Functions                               */
 function setName() {
     username = loginSection.querySelector("input").value;
     if (!isNaN(username)) return;
@@ -27,49 +27,46 @@ function setName() {
         loginSection.querySelector(".box").innerHTML = originalLoginSection;
         loginSection.querySelector("p").innerHTML = `Erro - ${e.response.data} <br> Nome de usuário já utilizado!`
     });
-    
     promise.then(() => {
-        loginSection.style.opacity = "0"; //Somente para transição
-        setTimeout(() => {loginSection.classList.add("hidden");}, 800); 
-        checkUserOn();
-        getMessages();
-        getParticipants();
-        to = "Todos";
-        visibility = "Público";
-        timerCheckUserOn = setInterval(checkUserOn, 5000);
-        timerNewMessages = setInterval(getNewMessages, 3000);
-        timerGetParticipants = setInterval(getParticipants, 10000);
-        
+        userLoggedIn();
     });
 }
 
-function getParticipants() {
-    axios.get(participantsAPI).catch(e => {
-        alert("Erro ao obter participantes da conversa. " + e.response.data);
-    }).then(s => {
-        asideContacts.querySelector(".new-contacts").innerHTML = "";
-        s.data.forEach(e => {
-            if (e.name !== username)
-            asideContacts.querySelector(".new-contacts").innerHTML += 
-                `<div class="contact" id="${e.name}" onclick="changeContact(this)">
-                    <div class="container">
-                        <ion-icon name="person-circle"></ion-icon>
-                        <p>${e.name}</p>
-                    </div>
-                    <ion-icon class="check ${(to === e.name) ? "select" : ""}" name="checkmark"></ion-icon>
-                </div>`
+function checkUserOn() {
+    if (document.visibilityState === "visible") {
+        axios.post(statusAPI, {name:username}).catch(e => {
+            alert("Erro ao atualizar status do usuário." + e.response.data);
         });
-        hasContactSelected();
-    });
-}
-
-function hasContactSelected() {
-    if (asideContacts.querySelector(".select") === null) { //Caso o contato selecionado saia do chat
-        changeContact(asideContacts.firstElementChild);
+    } else {
+        userLoggedOut(); //Não fiz com window.reload porque queria que mostrasse a mensagem: "Você saiu da sala", acredito que não seja problema, porque era uma recomendação
     }
-    updateAsideChanges();
 }
 
+function userLoggedIn() {
+    loginSection.style.opacity = "0"; //Somente para transição
+    setTimeout(() => {loginSection.classList.add("hidden");}, 800); 
+    checkUserOn();
+    getMessages();
+    getParticipants();
+    changeContact(asideContacts.firstElementChild);
+    timerCheckUserOn = setInterval(checkUserOn, 5000);
+    timerNewMessages = setInterval(getNewMessages, 3000);
+    timerGetParticipants = setInterval(getParticipants, 10000);
+}
+
+function userLoggedOut() {
+    clearInterval(timerCheckUserOn);
+    clearInterval(timerNewMessages);
+    clearInterval(timerGetParticipants);
+    loginSection.classList.remove("hidden");
+    loginSection.style.opacity = "1";
+    loginSection.querySelector(".box").innerHTML = originalLoginSection;
+    loginSection.querySelector("p").innerHTML = `Você saiu da sala.`;
+    loginSection.querySelector("input").value = username;
+    messageInput.value = "";
+}
+
+/*                                 Message Functions                               */
 function getMessages() {
     axios.get(messagesAPI).then(resp => {    
         drawMessages(resp.data);
@@ -102,28 +99,6 @@ function drawMessages(msg) {
     window.scrollTo(0,document.body.scrollHeight);
 }
 
-function checkUserOn() {
-    if (document.visibilityState === "visible") {
-        axios.post(statusAPI, {name:username}).catch(e => {
-            alert("Erro ao atualizar status do usuário." + e.response.data);
-        });
-    } else {
-        userLoggedOut();
-    }
-}
-
-function userLoggedOut() {
-    clearInterval(timerCheckUserOn);
-    clearInterval(timerNewMessages);
-    clearInterval(timerGetParticipants);
-    loginSection.classList.remove("hidden");
-    loginSection.style.opacity = "1";
-    loginSection.querySelector(".box").innerHTML = originalLoginSection;
-    loginSection.querySelector("p").innerHTML = `Você saiu da sala.`;
-    loginSection.querySelector("input").value = username;
-    messageInput.value = "";
-}
-
 function sendMessage() {
     const msg = {
         from: username,
@@ -132,12 +107,17 @@ function sendMessage() {
         type: (visibility === "Público" || to === "Todos") ? "message" : "private_message"
     }
     
+    messageInput.value = "";
     axios.post(messagesAPI, msg).then(() => {
-        messageInput.value = "";
-        getNewMessages();
+        clearInterval(timerNewMessages); //Para evitar que a getNewMessages() chamada periodicamente encontre a chamada abaixo no meio da requisição e duplique a msg
+        getNewMessages(); //Para ter dinamicidade ao enviar a msg
+        timerNewMessages = setInterval(getNewMessages, 3000);
     });
 }
 
+document.addEventListener("keypress", e => {
+    if (e.key === "Enter") sendMessage();
+});
 
 /*                            Collapsed asidebar                          */
 
@@ -175,4 +155,31 @@ function updateAsideChanges() {
         return;
     }
     sendToInfo.innerHTML = "";
+}
+
+function getParticipants() {
+    axios.get(participantsAPI).catch(e => {
+        alert("Erro ao obter participantes da conversa. " + e.response.data);
+    }).then(s => {
+        asideContacts.querySelector(".new-contacts").innerHTML = "";
+        s.data.forEach(e => {
+            if (e.name !== username)
+            asideContacts.querySelector(".new-contacts").innerHTML += 
+                `<div class="contact" id="${e.name}" onclick="changeContact(this)">
+                    <div class="container">
+                        <ion-icon name="person-circle"></ion-icon>
+                        <p>${e.name}</p>
+                    </div>
+                    <ion-icon class="check ${(to === e.name) ? "select" : ""}" name="checkmark"></ion-icon>
+                </div>`
+        });
+        hasContactSelected();
+    });
+}
+
+function hasContactSelected() {
+    if (asideContacts.querySelector(".select") === null) { //Caso o contato selecionado saia do chat
+        changeContact(asideContacts.firstElementChild);
+    }
+    updateAsideChanges();
 }
